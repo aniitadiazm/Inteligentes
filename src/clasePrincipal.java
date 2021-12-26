@@ -39,10 +39,10 @@ public class clasePrincipal {
 						break;
 						
 					default:
-						System.out.println("Opción no válida.");
+						System.out.println("Opciï¿½n no vï¿½lida.");
 				}
 			} catch (InputMismatchException e) {
-				System.out.println("Debes insertar un número.");
+				System.out.println("Debes insertar un nï¿½mero.");
 				sn.next();
 			}
 				
