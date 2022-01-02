@@ -1,6 +1,7 @@
 import java.io.StringReader;
-
-
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -128,21 +129,22 @@ public class Busqueda {
 	 * @return
 	 */
 	public static int Heuristica (Estado estado) {
+		
 		int h = 0;
-		ArrayList<Integer> Visitados = new ArrayList<>();
-		for(Bottle botella : estado.getBottles()) {
-			if(botella.getLiquids().isEmpty()) {
-				h+=botella.getLiquids().size()+1;
-			} else {
+        ArrayList<Integer> visitados = new ArrayList<>();
+        for (Bottle botella : estado.getBottles()) {
+			if(botella.getLiquids().isEmpty())
+				h++;
+			else {
 				h += botella.getLiquids().size();
-				
-				if(!Visitados.contains(botella.getLiquids().get(0).getColor())) {
-					Visitados.add(botella.getLiquids().get(0).getColor());
-				}
+				if(visitados.contains(botella.getLiquids().get(0).getColor()))
+					h++;
+				else
+					visitados.add(botella.getLiquids().get(0).getColor());
 			}
 		}
-
-		return h - estado.getBottles().size();
+        return h-estado.getBottles().size();
+		
 	}
 	
 	/***

@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -58,9 +59,29 @@ public class Nodo implements Comparable<Nodo> {
 	}
 	
 	public String toString() {
-		return String.format("[%d][%.2f,%s,%s,%s,%d,%.2f,%.2f]", id, coste, estado.toString(), padre == null ? "None":padre.getId(), accion == null ? "None" :accion.toString(), profundidad, heuristica, valor);
+		try {
+		
+			return String.format("[%d][%.2f,%s,%s,%s,%d,%.2f,%.2f]", id, coste, md5(estado.toString()), padre == null ? "None":padre.getId(), accion == null ? "None" :accion.toString(), profundidad, heuristica, valor);
+		
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return null;
 		
 	}
 	//[<ID>][<COSTO>,<ESTADO>,<ID_PADRE>,<ACCIÓN>,<PROFUNDIDAD>,<HEURISTICA>,<VALOR>]
+	
+	private static String md5(String estado) throws NoSuchAlgorithmException {
+		
+		MessageDigest md;
+		
+		md = MessageDigest.getInstance("MD5");
+		byte[] messageDigest = md.digest(estado.getBytes());
+	    BigInteger number = new BigInteger(1, messageDigest);
+	    String estadoMD5 = number.toString(16);
+        
+		return estadoMD5;
+	}
+	
 	
 }
