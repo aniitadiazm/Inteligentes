@@ -13,9 +13,12 @@ import javax.json.JsonReader;
 public class Busqueda {
 	
 	private static int id = 1;
+	private static int MaxSoporte = 0, nodosSoportados = 0, repetido = 0;
+	private static String melodan = "cc2a9314e6fedc7a6356a1658e4981b8";
+
 
 	public ArrayList<Nodo> getSolution(PuzzleProblem problem) throws Exception {
-		int profundidad = 1000000;
+		int profundidad = 600;
 		ArrayList<Nodo> solucion = new ArrayList<Nodo>();
 		Scanner teclado = new Scanner(System.in);
 		boolean salir = false;
@@ -99,10 +102,14 @@ public class Busqueda {
 		nodo.setHeuristica(Heuristica(nodo.getEstado()));
 		nodo.setValor(Valor(estrategia, nodo)); 
 		frontera.insertarNodo(nodo);
+		nodosSoportados++;
+		if(melodan.equals(md5(nodo.getEstado().toString()))) {
+			repetido++;
+		}
 		
 		while(!frontera.esVacia() && !solucion) {
 			nodo = frontera.primerNodo();
-			
+			nodosSoportados--;
 			if(Objetivo(nodo.getEstado())) {
 				solucion = true;
 				
@@ -116,10 +123,15 @@ public class Busqueda {
 						
 					//Insertamos los nodos hijos que se han generado de ese nodo
 					frontera.insertarNodo(listaNodosHijos.get(i));
+					nodosSoportados++;
+				}
+				if(nodosSoportados>= MaxSoporte) {
+					MaxSoporte= nodosSoportados;
 				}
 			}	
 		}
-		
+		System.out.print("\n\nLa frontera ha soportado "+MaxSoporte+" nodos.\n\n" );
+		System.out.print("\n\nEstado repetido "+repetido+" veces.\n\n" );
 		return Camino(nodo);
 	}
 	
@@ -225,14 +237,18 @@ public class Busqueda {
 			Nodo nodohijo = new Nodo();
 			nodohijo.setId(id);
 			nodohijo.setEstado(obtenerEstado((sucesores.get(i)).getNuevoEstado(), nodo.getEstado().get(0).getSize()));
+				if(melodan.equals(md5(nodohijo.getEstado().toString()))) {
+					repetido++;
+				}
 			nodohijo.setPadre(nodo);
 			nodohijo.setAccion(sucesores.get(i).getAccion());
 			nodohijo.setProfundidad(nodo.getProfundidad() + 1);
-			nodohijo.setCoste(nodo.getCoste() + sucesores.get(i).getCoste());
+			nodohijo.setCoste(nodohijo.getEstado().get(nodohijo.getAccion().getBotellaDestino()).getLiquids().get(0).getColor()+1);
 			nodohijo.setHeuristica(Heuristica(obtenerEstado((sucesores.get(i)).getNuevoEstado(), nodo.getEstado().get(0).getSize())));
 			nodohijo.setValor(Valor(estrategia, nodohijo));
 			nodosHijos.add(nodohijo);
 			id++;
+			
 		}
 		
 		return nodosHijos;
@@ -289,5 +305,15 @@ public class Busqueda {
 		return caminoSolucion;
 	}
 	
-	
+	private static String md5(String estado) throws NoSuchAlgorithmException {
+		
+		MessageDigest md;
+		
+		md = MessageDigest.getInstance("MD5");
+		byte[] messageDigest = md.digest(estado.getBytes());
+	    BigInteger number = new BigInteger(1, messageDigest);
+	    String estadoMD5 = number.toString(16);
+        
+		return estadoMD5;
+	}
 }

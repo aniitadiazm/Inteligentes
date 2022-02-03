@@ -11,7 +11,7 @@ public class clasePrincipal {
 	private static void menu() throws Exception {
 		Scanner sn = new Scanner(System.in);
 		boolean salir = false;
-		String nombre;
+		String nombre; 
 		int opcion; // Guardaremos la opcion del usuario
 		while (!salir) {
 			System.out.println("\n\nElige entre las opciones disponibles:");

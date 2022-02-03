@@ -40,7 +40,6 @@ public class PuzzleProblem {
 					BottleLiquid cambia = inicial.get(i).getLiquids().get(0);
 					int cantidad = inicial.get(i).getLiquids().get(0).getSize();
 					if(ES_AccionPosible(inicial.get(i), inicial.get(b), cantidad)) {
-							//&& (inicial.get(i).getLiquids().size()!=1)) {
 											
 						if(inicial.get(b).getLiquidQuantity() == 0) {
 											
